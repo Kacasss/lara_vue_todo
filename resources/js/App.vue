@@ -1,0 +1,199 @@
+<template>
+    <div>
+        メッセージ
+        <div v-if="successMsg" :class="successMsgClass">{{ successMsg }}</div>
+    </div>
+
+    <div :class="containerClass">
+        <!-- 追加フォーム -->
+        <div :class="mr5Class">
+            <div>
+                <button @click="addBtn" :class="[mb10Class, mr5Class]">追加</button>
+            </div>
+            <div v-if="addShow" :class="mb10Class">
+                <div v-if="errorMsg" :class="errorMsgClass">{{ errorMsg }}</div>
+
+                名前：<input type="text" v-model="name" name="name">
+                <br>
+                年齢：<input type="number" v-model="age" name="age">
+                <br>
+                <button @click="add" :class="mb5Class">ADD</button>
+            </div>
+        </div>
+
+        <!-- 更新フォーム -->
+        <div>
+            <div>
+                <button v-if="updateShow" @click="updateBtn" :class="mb5Class">更新</button>
+            </div>
+            <div v-if="updateShow" :class="mb10Class">
+                <p :class="m0Class">id: {{ id }}</p>
+                
+                名前：<input type="text" v-model="updateName" name="updateName">
+                <br>
+                年齢：<input type="number" v-model="updateAge" name="updateAge">
+                <br>
+                <button @click="updateTodo(id, updateName, updateAge)">UPDATE</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 一覧表示 -->
+    <ul>
+        <li v-for="todo in todos" :key="todo">
+            {{ todo.id }} / {{ todo.name }} / {{ todo.age }}
+            <button :class="mr5Class" @click="editTodo(todo)">EDIT</button>
+            <button @click="deleteTodo(todo.id)">DELETE</button>
+        </li>
+    </ul>
+</template>
+
+<script>
+    export default {
+        data () {
+            return {
+                addShow: false,
+                updateShow: false,
+
+                containerClass : "container",
+                m0Class: "m0",
+                mb5Class: "mb5",
+                mb10Class: "mb10",
+                mr5Class: "mr5",
+                successMsgClass: "successMsg",
+                errorMsgClass: "errorMsg",
+
+                todos: [],
+                id: null,
+                name: '',
+                age: null,
+                updateName: '',
+                updateAge: null,
+
+                successMsg: '',
+                errorMsg: '',
+            }
+        },
+        mounted() {
+            this.index();
+        },
+        methods: {
+            addBtn () {
+                this.addShow = !this.addShow;
+            },
+            updateBtn () {
+                this.updateShow = !this.updateShow;
+            },
+
+            async index() {
+                await axios.get("/api/todo")
+                .then(
+                    res => {
+                            // res.dataはオブジェクトが返却
+                            // res.data.dataで配列が返却される
+                            var arrayData = res.data.data;
+                            this.todos = arrayData;
+                        }
+                    )
+                .catch(err => console.error(err));
+            },
+            async add() {
+                if (this.name === '' || this.age === null || this.age < 0) {
+                    this.errorMsg = '名前か、年齢を正しく入力してください';
+                    return;
+                }
+
+                await axios.post("/api/todo/add", {
+                    name: this.name,
+                    age: this.age
+                }, )
+                .then(
+                    res => {
+                            this.name = "";
+                            this.age = null;
+
+                            this.successMsg = "登録しました";
+                            this.errorMsg = '';
+                            this.index();
+                        }
+                    )
+                .catch(err => console.error(err));
+            },
+            editTodo(todo) {
+                this.updateShow = true;
+
+                this.id = todo.id;
+                this.updateName = todo.name;
+                this.updateAge = todo.age;
+            },
+            async updateTodo() {
+                await axios.post("/api/todo/update/", {
+                    id: this.id,
+                    updateName: this.updateName,
+                    updateAge: this.updateAge
+                }, )
+                .then(
+                    res => {
+                            this.id = null,
+                            this.updateName = '';
+                            this.updateAge = null;
+
+                            this.successMsg = "更新しました";
+                            this.errorMsg = '';
+                            this.index();
+                        }
+                    )
+                .catch(err => console.error(err));
+            },
+
+            async deleteTodo(id) {
+                await axios.post("/api/todo/delete/", {
+                    id: id
+                })
+                .then(
+                    res => {
+                            this.successMsg = "削除しました";
+                            this.errorMsg = '';
+                            this.index();
+                        }
+                    )
+                .catch(err => console.error(err));
+            },
+        }
+    }
+</script>
+
+<style>
+    .container {
+        display: flex;
+    }
+
+    .m0 {
+        margin: 0;
+    }
+
+    .mb5 {
+        margin-bottom: 5px;
+    }
+
+    .mb10 {
+        margin-bottom: 10px;
+    }
+
+    .mr5 {
+        margin-right: 5px;
+    }
+
+    .successMsg {
+        font-size: 12px;
+        background: greenyellow;
+        width: 50%;
+        
+    }
+
+    .errorMsg {
+        font-size: 12px;
+        color: red;
+    }
+</style>
