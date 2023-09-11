@@ -1,7 +1,7 @@
 <template>
     <div>
         メッセージ
-        <div v-if="successMsg" :class="successMsgClass">{{ successMsg }}</div>
+        <div v-if="successMsg" class="successMsg">{{ successMsg }}</div>
     </div>
 
     <div class="container">
@@ -11,7 +11,7 @@
                 <button @click="addBtn" class="mb10 mr5">追加</button>
             </div>
             <div v-if="addShow" class="mb10">
-                <div v-if="errorMsg" :class="errorMsgClass">{{ errorMsg }}</div>
+                <div v-if="errorMsg" class="errorMsg">{{ errorMsg }}</div>
 
                 名前：<input type="text" v-model="addTodo.name" name="name">
                 <br>
@@ -54,9 +54,6 @@
             return {
                 addShow: false,
                 updateShow: false,
-
-                successMsgClass: "successMsg",
-                errorMsgClass: "errorMsg",
 
                 todos: [],
 
