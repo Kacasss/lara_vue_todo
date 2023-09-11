@@ -92,7 +92,21 @@
                 this.updateTodo.name = '';
                 this.updateTodo.age = null;
             },
-
+            success(msg) {
+                switch (msg) {
+                    case 'add':
+                        this.successMsg = "登録しました";
+                        break;
+                    case 'update':
+                        this.successMsg = "更新しました";
+                        break;
+                    case 'delete':
+                        this.successMsg = "削除しました";
+                        break;
+                }
+                this.errorMsg = '';
+                return;
+            },
             async index() {
                 await axios.get("/api/todo")
                 .then(
@@ -115,9 +129,7 @@
                 .then(
                     res => {
                             this.initTodoForm('add');
-
-                            this.successMsg = "登録しました";
-                            this.errorMsg = '';
+                            this.success('add');
                             this.index();
                         }
                     )
@@ -135,9 +147,7 @@
                 .then(
                     res => {
                             this.initTodoForm('update');
-
-                            this.successMsg = "更新しました";
-                            this.errorMsg = '';
+                            this.success('update');
                             this.index();
                         }
                     )
@@ -150,8 +160,7 @@
                 })
                 .then(
                     res => {
-                            this.successMsg = "削除しました";
-                            this.errorMsg = '';
+                            this.success('delete');
                             this.index();
                         }
                     )
