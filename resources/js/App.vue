@@ -85,6 +85,16 @@
             updateBtn () {
                 this.updateShow = !this.updateShow;
             },
+            initTodoForm(word) {
+                if (word === 'add') {
+                    this.addTodo.name = '';
+                    this.addTodo.age = null;
+                    return;
+                }
+                this.updateTodo.id = null;
+                this.updateTodo.name = '';
+                this.updateTodo.age = null;
+            },
 
             async index() {
                 await axios.get("/api/todo")
@@ -107,8 +117,7 @@
                 await axios.post("/api/todo/add", this.addTodo)
                 .then(
                     res => {
-                            this.addTodo.name = "";
-                            this.addTodo.age = null;
+                            this.initTodoForm('add');
 
                             this.successMsg = "登録しました";
                             this.errorMsg = '';
@@ -128,9 +137,7 @@
                 await axios.post("/api/todo/update/", this.updateTodo)
                 .then(
                     res => {
-                            this.updateTodo.id = null,
-                            this.updateTodo.name = '';
-                            this.updateTodo.age = null;
+                            this.initTodoForm('update');
 
                             this.successMsg = "更新しました";
                             this.errorMsg = '';
