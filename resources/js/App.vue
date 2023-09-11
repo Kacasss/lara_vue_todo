@@ -4,30 +4,30 @@
         <div v-if="successMsg" :class="successMsgClass">{{ successMsg }}</div>
     </div>
 
-    <div :class="containerClass">
+    <div class="container">
         <!-- 追加フォーム -->
-        <div :class="mr5Class">
+        <div class="mr5">
             <div>
-                <button @click="addBtn" :class="[mb10Class, mr5Class]">追加</button>
+                <button @click="addBtn" class="mb10 mr5">追加</button>
             </div>
-            <div v-if="addShow" :class="mb10Class">
+            <div v-if="addShow" class="mb10">
                 <div v-if="errorMsg" :class="errorMsgClass">{{ errorMsg }}</div>
 
                 名前：<input type="text" v-model="name" name="name">
                 <br>
                 年齢：<input type="number" v-model="age" name="age">
                 <br>
-                <button @click="add" :class="mb5Class">ADD</button>
+                <button @click="add" class="mb5">ADD</button>
             </div>
         </div>
 
         <!-- 更新フォーム -->
         <div>
             <div>
-                <button v-if="updateShow" @click="updateBtn" :class="mb5Class">更新</button>
+                <button v-if="updateShow" @click="updateBtn" class="mb5">更新</button>
             </div>
-            <div v-if="updateShow" :class="mb10Class">
-                <p :class="m0Class">id: {{ id }}</p>
+            <div v-if="updateShow" class="mb10">
+                <p class="m0">id: {{ id }}</p>
                 
                 名前：<input type="text" v-model="updateName" name="updateName">
                 <br>
@@ -36,14 +36,13 @@
                 <button @click="updateTodo(id, updateName, updateAge)">UPDATE</button>
             </div>
         </div>
-
     </div>
 
     <!-- 一覧表示 -->
     <ul>
         <li v-for="todo in todos" :key="todo">
             {{ todo.id }} / {{ todo.name }} / {{ todo.age }}
-            <button :class="mr5Class" @click="editTodo(todo)">EDIT</button>
+            <button class="mr5" @click="editTodo(todo)">EDIT</button>
             <button @click="deleteTodo(todo.id)">DELETE</button>
         </li>
     </ul>
@@ -56,11 +55,6 @@
                 addShow: false,
                 updateShow: false,
 
-                containerClass : "container",
-                m0Class: "m0",
-                mb5Class: "mb5",
-                mb10Class: "mb10",
-                mr5Class: "mr5",
                 successMsgClass: "successMsg",
                 errorMsgClass: "errorMsg",
 
