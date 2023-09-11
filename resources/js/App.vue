@@ -27,13 +27,13 @@
                 <button v-if="updateShow" @click="updateBtn" class="mb5">更新</button>
             </div>
             <div v-if="updateShow" class="mb10">
-                <p class="m0">id: {{ id }}</p>
+                <p class="m0">id: {{ updateTodo.id }}</p>
                 
-                名前：<input type="text" v-model="updateName" name="updateName">
+                名前：<input type="text" v-model="updateTodo.name" name="name">
                 <br>
-                年齢：<input type="number" v-model="updateAge" name="updateAge">
+                年齢：<input type="number" v-model="updateTodo.age" name="age">
                 <br>
-                <button @click="updateTodo(id, updateName, updateAge)">UPDATE</button>
+                <button @click="updateTodoById()">UPDATE</button>
             </div>
         </div>
     </div>
@@ -65,10 +65,11 @@
                     age: null,
                 },
 
-                id: null,
-                
-                updateName: '',
-                updateAge: null,
+                updateTodo: {
+                    id: null,      
+                    name: '',
+                    age: null,
+                },
 
                 successMsg: '',
                 errorMsg: '',
@@ -119,21 +120,17 @@
             editTodo(todo) {
                 this.updateShow = true;
 
-                this.id = todo.id;
-                this.updateName = todo.name;
-                this.updateAge = todo.age;
+                this.updateTodo.id = todo.id;
+                this.updateTodo.name = todo.name;
+                this.updateTodo.age = todo.age;
             },
-            async updateTodo() {
-                await axios.post("/api/todo/update/", {
-                    id: this.id,
-                    updateName: this.updateName,
-                    updateAge: this.updateAge
-                }, )
+            async updateTodoById() {
+                await axios.post("/api/todo/update/", this.updateTodo)
                 .then(
                     res => {
-                            this.id = null,
-                            this.updateName = '';
-                            this.updateAge = null;
+                            this.updateTodo.id = null,
+                            this.updateTodo.name = '';
+                            this.updateTodo.age = null;
 
                             this.successMsg = "更新しました";
                             this.errorMsg = '';

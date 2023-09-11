@@ -21,8 +21,8 @@ class TodoController extends Controller
 
     public function update(Request $request) {
         Todo::where("id", "=", $request->input('id'))->update([
-            "name" => $request->input('updateName'),
-            "age" => $request->input('updateAge'),
+            "name" => $request->input('name'),
+            "age" => $request->input('age'),
         ]);
     }
 
