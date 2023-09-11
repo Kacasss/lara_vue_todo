@@ -13,9 +13,9 @@
             <div v-if="addShow" class="mb10">
                 <div v-if="errorMsg" :class="errorMsgClass">{{ errorMsg }}</div>
 
-                名前：<input type="text" v-model="name" name="name">
+                名前：<input type="text" v-model="addTodo.name" name="name">
                 <br>
-                年齢：<input type="number" v-model="age" name="age">
+                年齢：<input type="number" v-model="addTodo.age" name="age">
                 <br>
                 <button @click="add" class="mb5">ADD</button>
             </div>
@@ -59,9 +59,14 @@
                 errorMsgClass: "errorMsg",
 
                 todos: [],
+
+                addTodo: {
+                    name: '',
+                    age: null,
+                },
+
                 id: null,
-                name: '',
-                age: null,
+                
                 updateName: '',
                 updateAge: null,
 
@@ -93,19 +98,16 @@
                 .catch(err => console.error(err));
             },
             async add() {
-                if (this.name === '' || this.age === null || this.age < 0) {
+                if (this.addTodo.name === '' || this.addTodo.age === null || this.addTodo.age < 0) {
                     this.errorMsg = '名前か、年齢を正しく入力してください';
                     return;
                 }
 
-                await axios.post("/api/todo/add", {
-                    name: this.name,
-                    age: this.age
-                }, )
+                await axios.post("/api/todo/add", this.addTodo)
                 .then(
                     res => {
-                            this.name = "";
-                            this.age = null;
+                            this.addTodo.name = "";
+                            this.addTodo.age = null;
 
                             this.successMsg = "登録しました";
                             this.errorMsg = '';
