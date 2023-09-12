@@ -58,6 +58,7 @@
                 todos: [],
 
                 addTodo: {
+                    csrf: 'csrfトークン',
                     name: '',
                     age: null,
                 },
@@ -70,6 +71,8 @@
 
                 successMsg: '',
                 errorMsg: '',
+
+                // csrf: 'csrfトークン',
             }
         },
         mounted() {
@@ -131,9 +134,16 @@
                     return;
                 }
 
+                // await axios.post("/api/todo/add", this.addTodo, {
+                //     csrf: this.csrf
+                //     }, )
                 await axios.post("/api/todo/add", this.addTodo)
                 .then(
                     res => {
+                            if(res.data === '不正な処理です') {
+                                this.errorMsg = '不正な処理です';
+                                return;
+                            }
                             this.afterThen('add');
                         }
                     )
@@ -147,7 +157,7 @@
                 this.updateTodo.age = todo.age;
             },
             async updateTodoById() {
-                await axios.post("/api/todo/update/", this.updateTodo)
+                await axios.post("/api/todo/update/", this.updateTodo, this.csrfToken)
                 .then(
                     res => {
                             this.afterThen('update');
