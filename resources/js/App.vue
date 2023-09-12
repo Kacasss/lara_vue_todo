@@ -33,7 +33,7 @@
                 <br>
                 年齢：<input type="number" v-model="updateTodo.age" name="age">
                 <br>
-                <button @click="updateTodoById()">UPDATE</button>
+                <button @click="updateTodoById">UPDATE</button>
             </div>
         </div>
     </div>
@@ -92,20 +92,26 @@
                 this.updateTodo.name = '';
                 this.updateTodo.age = null;
             },
+            afterThen(crud) {
+                if (crud !== 'delete') {
+                    this.initTodoForm(crud);
+                }
+                this.success(crud);
+                this.errorMsg = '';
+                this.index();
+            },
             success(msg) {
                 switch (msg) {
                     case 'add':
                         this.successMsg = "登録しました";
-                        break;
+                        return;
                     case 'update':
                         this.successMsg = "更新しました";
-                        break;
+                        return;
                     case 'delete':
                         this.successMsg = "削除しました";
-                        break;
+                        return;
                 }
-                this.errorMsg = '';
-                return;
             },
             async index() {
                 await axios.get("/api/todo")
@@ -128,9 +134,7 @@
                 await axios.post("/api/todo/add", this.addTodo)
                 .then(
                     res => {
-                            this.initTodoForm('add');
-                            this.success('add');
-                            this.index();
+                            this.afterThen('add');
                         }
                     )
                 .catch(err => console.error(err));
@@ -146,9 +150,7 @@
                 await axios.post("/api/todo/update/", this.updateTodo)
                 .then(
                     res => {
-                            this.initTodoForm('update');
-                            this.success('update');
-                            this.index();
+                            this.afterThen('update');
                         }
                     )
                 .catch(err => console.error(err));
@@ -160,8 +162,7 @@
                 })
                 .then(
                     res => {
-                            this.success('delete');
-                            this.index();
+                            this.afterThen('delete');
                         }
                     )
                 .catch(err => console.error(err));
