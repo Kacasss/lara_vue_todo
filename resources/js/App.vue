@@ -11,11 +11,15 @@
                 <button @click="addBtn" class="mb10 mr5">追加</button>
             </div>
             <div v-if="addShow" class="mb10">
-                <div v-if="errorMsg" class="errorMsg">{{ errorMsg }}</div>
+                <div v-if="errorMsg" class="errorMsg">
+                    {{ errorMsg.name }}
+                    <br>
+                    {{ errorMsg.age }}
+                </div>
 
                 名前：<input type="text" v-model="addTodo.name" name="name">
                 <br>
-                年齢：<input type="number" v-model="addTodo.age" name="age">
+                年齢：<input type="text" v-model="addTodo.age" name="age">
                 <br>
                 <button @click="add" class="mb5">ADD</button>
             </div>
@@ -31,7 +35,7 @@
                 
                 名前：<input type="text" v-model="updateTodo.name" name="name">
                 <br>
-                年齢：<input type="number" v-model="updateTodo.age" name="age">
+                年齢：<input type="text" v-model="updateTodo.age" name="age">
                 <br>
                 <button @click="updateTodoById">UPDATE</button>
             </div>
@@ -70,7 +74,7 @@
                 },
 
                 successMsg: '',
-                errorMsg: '',
+                errorMsg: [],
 
                 // csrf: 'csrfトークン',
             }
@@ -129,10 +133,10 @@
                 .catch(err => console.error(err));
             },
             async add() {
-                if (this.addTodo.name === '' || this.addTodo.age === null || this.addTodo.age < 0) {
-                    this.errorMsg = '名前か、年齢を正しく入力してください';
-                    return;
-                }
+                // if (this.addTodo.name === '' || this.addTodo.age === null || this.addTodo.age < 0) {
+                //     this.errorMsg = '名前か、年齢を正しく入力してください';
+                //     return;
+                // }
 
                 // await axios.post("/api/todo/add", this.addTodo, {
                 //     csrf: this.csrf
@@ -144,10 +148,19 @@
                                 this.errorMsg = '不正な処理です';
                                 return;
                             }
+
                             this.afterThen('add');
                         }
                     )
-                .catch(err => console.error(err));
+                .catch(
+                    err => {
+                            console.log(err.response.data.errors.name);
+                            this.errorMsg['name'] = err.response.data.errors.name;
+                            this.errorMsg['age'] = err.response.data.errors.age;
+
+                            // console.log(this.errorMsg);
+                        } 
+                    );
             },
             editTodo(todo) {
                 this.updateShow = true;
@@ -157,7 +170,7 @@
                 this.updateTodo.age = todo.age;
             },
             async updateTodoById() {
-                await axios.post("/api/todo/update/", this.updateTodo, this.csrfToken)
+                await axios.post("/api/todo/update/", this.updateTodo)
                 .then(
                     res => {
                             this.afterThen('update');

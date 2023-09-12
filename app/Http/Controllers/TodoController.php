@@ -13,21 +13,20 @@ class TodoController extends Controller
     }
 
     public function add(Request $request) {
-        // $inputs = request()->validate([
-        //     "name" => 'required',
-        //     "age" => 'required',
-        // ]);
-
-        file_put_contents('test.txt', print_r($request->input('csrf'), true));
-
         if ($request->input('csrf') !== 'csrfトークン') {
-            $msg = '不正な処理です';
-            return response()->json($msg);
+            return response()->json('不正な処理です');
         }
 
+        $inputs = request()->validate([
+            "name" => 'required',
+            "age" => 'required | min:0 | numeric',
+        ]);
+
+        // file_put_contents('test.txt', print_r($request->input('csrf'), true));
+
         Todo::create([
-            "name" => $request->input('name'),
-            "age" => $request->input('age'),
+            "name" => $inputs["name"],
+            "age" => $inputs["age"],
         ]);
     }
 

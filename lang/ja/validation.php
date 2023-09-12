@@ -89,7 +89,7 @@ return [
     'mimes' => ':attributeには:valuesタイプのファイルを指定してください。',
     'mimetypes' => ':attributeには:valuesタイプのファイルを指定してください。',
     'min' => [
-        'numeric' => ':attributeには、:min以上の数字を指定してください。',
+        'numeric' => ':attributeには、:min歳以上の数字を指定してください。',
         'file' => ':attributeには、:min kb以上のファイルを指定してください。',
         'string' => ':attributeは、:min文字以上で指定してください。',
         'array' => ':attributeは:min個以上指定してください。',
@@ -117,7 +117,7 @@ return [
     'prohibited_unless' => ':otherが:valueでない場合、:attributeは入力禁止です。',
     'prohibits' => 'attributeは:otherの入力を禁じています。',
     'regex' => ':attributeに正しい形式を指定してください。',
-    'required' => ':attributeは必ず指定してください。',
+    'required' => ':attributeを入力してください。',
     'required_array_keys' => ':attributeは、:valuesの項目を含めてください。',
     'required_if' => ':otherが:valueの場合、:attributeも指定してください。',
     'required_if_accepted' => ':attributeは、:otherが承認された場合は、必ず指定してください。',
@@ -176,7 +176,7 @@ return [
 
     'attributes' => [
         'address' => '住所',
-        'age' => '歳',
+        'age' => '年齢',
         'amount' => '額',
         'area' => 'エリア',
         'available' => '利用可能',
